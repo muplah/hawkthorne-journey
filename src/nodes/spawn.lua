@@ -58,11 +58,11 @@ function Spawn.new(node, collider)
 end
 
 function Spawn:enter()
-	local open = self.db:get( self.name .. '-open', false)
-	if open ~= false then
-		self.state = "open"
-		self.collider:remove(self.bb)
-	end
+  local open = self.db:get( self.name .. '-' .. self.position.x .. 'x' .. self.position.y ,  false)
+  if open then
+    self.state = "open"
+    self.collider:remove(self.bb)
+  end
 end
 
 function Spawn:update( dt, player )
@@ -125,11 +125,7 @@ function Spawn:keypressed( button, player )
     if not self.key or player.inventory:hasKey(self.key) then
       sound.playSfx('unlocked')
       self.state = "open"
-	  self.db:set(self.name .. '-open', {
-		xposition = self.position.x,
-		yposition = self.position.y,
-		level = self.containerLevel.name
-	  })
+      self.db:set(self.name .. '-' .. self.position.x .. 'x'.. self.position.y , true)
       player.freeze = true
       player.invulnerable = true
       player.character.state = "acquire"
